@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KA-MÃO - Quadros Decorativos</title>
+    <style>
+        /* BASE & LAYOUT */
+								 body {
+												background-color:#f1c40f; ;
+										    margin: px;
+										    padding: 0px;
+										    font-family: Arial, sans-serif;
+										    display: flex;
+								    justify-content: center; /* Centraliza o app inteiro na tela */
+						  }
+										    
+										/* 🔥 A NOVA CAIXA MASTER QUE ACOPLA TODOS OS GRIDS */
+										.container-principal {
+											  
+										    width: 100%;
+										    border-top: 3px solid #f1c40f; 
+										    top:0px;
+										    margin: 5px;
+										    padding: 5px;
+										    max-width: 400px;        /* Tamanho padrão ideal para visualização de celular */
+										    background-color: #2c3e50; /* O VERDE OLIVA que você quer no fundo de tudo */
+										    min-height: 100vh;       /* Garante que o verde vá até o final da tela */
+										    position: relative;
+										    box-sizing: border-box;
+										    display: flex;
+										    flex-direction: column;
+										    align-items: center;
+										    box-shadow: 0 0 20px rgba(0,0,0,0.3); /* Sombra nas laterais se visto no PC */
+										}
+							.header-fixo {
+							    position: fixed;
+							    top: 4px;
+							    left: 0;
+							    width: 100%;
+							    max-width: 400px;
+							    z-index: 1000;
+							
+							    display: flex;
+							    justify-content: space-between;
+							    align-items: center;
+							
+							    background: #1a252f;
+							    padding: 12px 15px;
+							    box-sizing: border-box;
+							
+							    border-top: 3px solid #f1c40f;
+							    border-bottom: 3px solid #f1c40f;
+							}
+							
+							.header-fixo h3 {
+							    margin: 0;
+							    font-size: 28px;
+							    font-weight: bold;
+							    color: #7ba366;
+							}
+        /* espaco :CONTEÚDO ROLÁVEL - CORRIGIDO O SPAÇO DO TOPO */
+        .grid-painel {
+            width: 105%;
+            display: flex; 
+            flex-direction: column;
+            gap: 10px;/*espaço entre grid*/
+        }
+
+        /* CARD verde DE visor PRODUTO NEUMORPHIC VERDE OLIVA SUAVE */
+        .linha-produto {
+            background: #a9cb99; 
+            border-radius: 10px;
+            padding: 12px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: px;
+            
+        }
+        .linha-produto.selecionado {
+    background: #cdd5af;
+    border-left: 8px solid #f1c40f;
+    border-right: 8px solid #f1c40f;
+
+    box-shadow:
+        0 0 10px #f1c40f,
+        0 0 20px rgba(241,196,15,0.6);
+
+    transition: all 0.3s ease;
+}
+        .subtotal-linha {
+            color:#9b8999;            
+            font-size: 18px;
+        }
+        .btn-passo:active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        /* VISOR DE IMAGENS COLADAS */
+        .imagens-progresso {
+            display: grid;
+            grid-template-columns: repeat(7, 42px);
+            gap: 1px;
+            background-color: white; 
+            padding: px;        
+            border-radius: 4px;
+            min-height: 50px;
+            width: 100%;          
+            box-sizing: border-box;
+            justify-content: start;
+            margin-top: 1px;
+        }
+
+        .box-quadro {
+            width: 70px;
+            height: 70px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .box-quadro img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* MODAIS (ZOOM E CARRINHO) */
+        .modal-background {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-conteudo {
+            background-color: #fff;
+            color: #333;
+            width: 85%;
+            max-width: 400px;
+            border-radius: 12px;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+            text-align: center;
+        }
+
+        .btn-fechar-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            color: red;
+        }
+
+        .modal-imagem {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .total-box {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-top: 15px;
+            text-align: right;
+        }
+
+        .btn-confirmar-final {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        /* EFEITO 3D REVERSO */
+        .box-quadro.efeito3d {
+            z-index: 2;
+        }
+        .box-quadro.efeito3d:nth-child(1n+7){
+            transform: translate(50%,-8%);
+        }
+        .box-quadro.efeito3d:nth-child(1n+13) {
+            transform: translate(0%, -8%);
+        }
+        .box-quadro.efeito3d:nth-child(1n+19) {
+            transform: translate(50%, -8%); 
+        }
+/* ==========================================================================
+   RODAPÉ FIXO MESTRE - ENGENHARIA DE ESTEIRA HOLOGRÁFICA (LIMPO E CORRIGIDO)
+   ========================================================================== */
+
+/* CONTAINER PRINCIPAL DO RODAPÉ */
+.rodape-fixo {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: 500px;
+    background-color: #1a252f; /* Substituído o vermelho por um grafite premium */
+    padding: 8px 0;           /* Zera o padding lateral para a esteira sangrar as bordas */
+    box-sizing: border-box;
+    z-index: 1000;
+    border-top: 3px solid #f1c40f; /* Detalhe dourado na borda superior */
+}
+
+/* 🔥 A ESTEIRA ROLANTE HORIZONTAL */
+.controles-rodape {
+    display: flex;
+    flex-wrap: nowrap;          /* Proíbe quebrar linha */
+    overflow-x: auto;           /* Ativa rolagem horizontal */
+    overflow-y: hidden;         /* Trava rolagem vertical */
+    gap: 12px;                  /* Espaço perfeito entre os módulos */
+    padding: 5px 15px;          /* Padding que cria o respiro nas pontas da tela */
+    width: 100%;                /* Ocupa exatamente a largura do pai */
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch; /* Rolagem macia no Android */
+}
+
+/* Esconde a barra de rolagem feia do navegador */
+.controles-rodape::-webkit-scrollbar {
+    display: none;
+}
+
+/* 🛠️ ENGENHARIA DOS MÓDULOS (Bordas individuais inseridas aqui) */
+.seletor-carrossel, 
+.controle-quantidade-novo, 
+.btn-finalizar-rodape {
+    flex: 0 0 auto;             /* IMPEDE o navegador de esmagar as pontas (Conserta a seta oculta) */
+    width: %;                 /* 🔥 MÁGICA DO CORTE: mostra dois módulos e deixa o 3º cortado avisando que rola */
+    height: 50px;               /* Alinha a altura de todo mundo igualmente */
+    box-sizing: border-box;
+    
+    /* Borda individual solicitada para isolar cada bloco */
+    border: 2px solid rgba(241, 196, 15, 0.4); /* Borda dourada sutil */
+    border-radius: 6px;         /* Cantos levemente arredondados modernos */
+}
+
+/* SELETORES EM FORMATO DE CARROSSEL ◀ [ TEXTO ] ▶ */
+.seletor-carrossel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50;
+    overflow: hidden;
+}
+
+/* Botões internos de setas */
+.btn-seta {
+    background-color: #34495e;
+    color: #f1c40f;
+    border: none;
+    height: 100%;
+    padding: 0 15px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.btn-seta:active { background-color: #f1c40f; color: #1a252f; }
+
+.visor-carrossel {
+    flex: 1;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+/* CONTROLE DE QUANTIDADE (- 0 +) */
+.controle-quantidade-novo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50;
+    overflow: hidden;
+}
+
+.btn-qtd {
+    background-color: #34495e;
+    color: white;
+    border: none;
+    height: 100%;
+    width: 40px;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.btn-qtd:active { background-color: #7f8c8d; }
+
+#qtd-rodape-label {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    flex: 1;
+    text-align: center;
+}
+
+/* BOTÃO FINALIZAR PREMIUM */
+.btn-finalizar-rodape {
+    background-color: #27ae60;
+    color: white;
+    border: 2px solid #2ecc71; /* Borda específica para destacar o verde */
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.btn-finalizar-rodape:active { background-color: #219653; }
+
+.produto-ativo-label {
+    color: #f1c40f;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* AJUSTE NO MEIO ROLÁVEL */
+.conteudo-rolavel {
+    margin-top: 75px;    /* Protege o topo */
+    margin-bottom: 95px; /* 🔥 NOVA MARGEM: Impede o último produto de ficar escondido atrás do rodapé */
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+    
+}
+/* ⚡ ESSE COMANDO FAZ A SEPARAÇÃO VISUAL MÁGICA */
+.titulo-linha {
+    display: flex; !important;
+    justify-content: space-between; /* Empurra textos para a esquerda e botões para a extrema direita */
+    align-items: center;            /* Alinha os centros na mesma linha horizontal */
+    width: 100%;
+    box-sizing: border-box;
+    padding: 6px 12px;
+}
+
+/* Mantém o título e subtotal empilhados organizadamente */
+.textos-esquerda {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+}
+
+/* O bloco dos botões do grid */
+.botoes-direita {
+    display: flex;
+    align-items: center;
+    background-color: #34495e; /* Fundo combinando com o tema */
+    border: 1px solid rgba(241, 196, 15, 0.5); /* Bordinha dourada sutil */
+    border-radius: 4px;
+    overflow: hidden;
+    height: 32px; /* Altura compacta para não brigar com as fotos */
+}
+
+/* Estilização dos mini botões + e - */
+.btn-grid-qtd {
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    width: 32px;
+    height: 100%;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-grid-qtd:active { background-color: #f1c40f; color: black; }
+
+/* O número centralizado entre as teclas */
+.numero-grid-qtd {
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    min-width: 30px;
+    text-align: center;
+}
+.linha-produto {
+    /* ... suas configurações atuais de borda, fundo, padding ... */
+    cursor: pointer; /* Mostra a mãozinha se testado no computador */
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* 🔥 FEEDBACK AO TOQUE: Quando o cliente pressionar o dedo no card */
+.linha-produto:active {
+    background-color: rgba(255, 255, 255, 0.05); /* Dá uma leve clareada no fundo */
+}
+
+
+    </style>
+
+</head>
+<body>
+<div class="container-principal">
+
+
+    <div class="header-fixo">
+
+                    <button class="btn-seta" onclick="navegarEstilo(-1)">◀</button>
+                <h3>---KA-MÃO--.</h3>
+                <button class="btn-seta">▶</button>
+    </div>
+
+    <div class="conteudo-rolavel">
+        <div id="painelGrid" class="grid-painel"></div>
+    </div>
+<div <div class="rodape-fixo">
+    <div class="controles-rodape">
+
+        <div class="seletor-carrossel">
+            <button class="btn-seta" onclick="navegarEstilo(-1)">◀</button>
+            <div class="visor-carrossel">
+                <span id="estilo-ativo-label">A</span>
+            </div>
+            <button class="btn-seta" onclick="navegarEstilo(1)">▶</button>
+        </div>
+
+        <button class="btn-finalizar-rodape" onclick="abrirCarrinhoModal()">
+            Finalizar
+        </button>
+
+        <div style="display: none;">
+            <span id="qtd-rodape-label">0</span>
+            <span id="produto-ativo-label">XADREZ</span>
+        </div>
+
+    </div>
+</div>
+
+    <div id="modalDetalhes" class="modal-background" onclick="fecharModal()">
+        <div class="modal-conteudo" onclick="event.stopPropagation()">
+            <span class="btn-fechar-modal" onclick="fecharModal()">&times;</span>
+            <img id="modalImg" class="modal-imagem" src="" alt="Zoom do Quadro">
+            <div style="text-align: left;">
+                <h4 id="modalTitulo" style="color: #1565c0; text-transform: uppercase; margin: 0 0 10px 0;">Nome do Quadro</h4>
+                <p id="modalTxtPreco"><b>Valor Unitário:</b> R$ 30,00</p>
+                <p><b>Medidas disponíveis:</b> 20x20 cm, 30x30 cm, 40x40 cm</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalCarrinho" class="modal-background" onclick="fecharCarrinhoModal()">
+        <div class="modal-conteudo" onclick="event.stopPropagation()">
+            <span class="btn-fechar-modal" onclick="fecharCarrinhoModal()">&times;</span>
+            <h3 style="margin: 0; color: #333; border-bottom: 2px solid #2e7d32; padding-bottom: 5px;">Seu Carrinho de Compras</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Valor</th>
+                        <th>Qtd</th>
+                    </tr>
+                </thead>
+                <tbody id="itensCarrinho"></tbody>
+            </table>
+            
+            <div class="total-box" id="totalCarrinho">TOTAL: R$ 0,00</div>
+            <button class="btn-confirmar-final" onclick="enviarPedidoFaturamento()">Confirmar e Enviar</button>
+        </div>
+    </div>
+
+    <script>
+	
+	
+        const PRECO_UNITARIO = 30; 
+        const quantidadesPorLinha = { 
+            "Xadrez": 0,
+            "Mosaico": 0, 
+            "Triangulo": 0, 
+            "Efeito 3D": 0, 
+            "Taco": 0,          
+            "Tigre": 0   
+        };
+
+        const bancoImagens = {
+            "Xadrez" :   { zero: "xadrez.jpg", um: "taco.jpg" },
+            "Mosaico":   { zero: "mosaico5.jpg", um: "mosaico6.jpg" },
+            "Triangulo": { zero: "triangulo.jpg", um: "taco.jpg" }, 
+            "Efeito 3D": { zero: "efeito3D.jpg" },
+            "Taco":      { zero: "taco.jpg", um: "mosaico5.jpg" },
+            "Tigre":      { zero: "tigre.jpg", um: "mosaico5.jpg" }
+        };
+
+        const estilosPorLinha = {
+            "Xadrez": "A",
+            "Mosaico": "A",
+            "Triangulo": "A",
+            "Efeito 3D": "A",
+            "Taco": "A",
+            "Tigre": "A"
+        };
+
+        const nomesEstilos = {
+            A: "Cheio",
+            B: "Xadrez",
+            C: "Misto"
+        };
+
+        // VARIÁVEL GLOBAL QUE GUARDA QUAL CATEGORIA ESTÁ NO MEIO DA TELA
+                // Listas de referência para a navegação por setas
+        const listaCategorias = Object.keys(quantidadesPorLinha); // ["Xadrez", "Mosaico", "Triangulo", "Efeito 3D", "Taco"]
+        const listaEstilos = ["A", "B", "C"];
+        
+        let categoriaAtiva = "Xadrez"; // Começa na primeira
+
+        window.onload = function() {
+            renderizarGrid();
+            atualizarVisualRodape(); // Atualiza os textos do console logo no início
+        };
+
+        // 🎯 NAVEGAÇÃO DE CATEGORIAS (Mosaico, Xadrez...)
+        function navegarCategoria(direcao) {
+            let indiceAtual = listaCategorias.indexOf(categoriaAtiva);
+            indiceAtual += direcao;
+
+            // Efeito Loop: Se passar do fim, volta pro começo. Se for menor que zero, vai pro fim.
+            if (indiceAtual >= listaCategorias.length) indiceAtual = 0;
+            if (indiceAtual < 0) indiceAtual = listaCategorias.length - 1;
+
+            categoriaAtiva = listaCategorias[indiceAtual];
+            
+            atualizarVisualRodape();
+            renderizarGrid();
+            
+            // Dá um scroll sutil automático para o card selecionado ficar visível na tela
+            const cardElemento = document.getElementById(`card-${categoriaAtiva}`);
+            if (cardElemento) {
+                cardElemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // 🎯 NAVEGAÇÃO DE ESTILOS (A, B, C)
+        function navegarEstilo(direcao) {
+            let estiloAtual = estilosPorLinha[categoriaAtiva] || "A";
+            let indiceAtual = listaEstilos.indexOf(estiloAtual);
+            
+            indiceAtual += direcao;
+
+            if (indiceAtual >= listaEstilos.length) indiceAtual = 0;
+            if (indiceAtual < 0) indiceAtual = listaEstilos.length - 1;
+
+            estilosPorLinha[categoriaAtiva] = listaEstilos[indiceAtual];
+            
+            atualizarVisualRodape();
+            renderizarGrid();
+        }
+
+        // 🔄 SINCRONIZA OS TEXTOS DO RODAPÉ COM A CATEGORIA SELECIONADA
+        function atualizarVisualRodape() {
+            document.getElementById('produto-ativo-label').innerText = categoriaAtiva;
+            const estiloAtual = estilosPorLinha[categoriaAtiva] || "A";
+            document.getElementById('estilo-ativo-label').innerText = estiloAtual;
+            document.getElementById('qtd-rodape-label').innerText = quantidadesPorLinha[categoriaAtiva] || 0;
+        }
+        // 🚀 MOTOR DE ALTERAÇÃO DIRETA PELO GRID
+function alterarQtdDiretoNoGrid(nomeDaLinha, mudanca) {
+    // 1. Calcula a nova quantidade baseada na linha clicada
+    let novaQtd = (quantidadesPorLinha[nomeDaLinha] || 0) + mudanca;
+    
+    // Trava de segurança: impede quantidade negativa
+    if (novaQtd < 0) novaQtd = 0;
+    
+    // 2. Grava o novo valor no banco de dados temporário
+    quantidadesPorLinha[nomeDaLinha] = novaQtd;
+    
+    // 3. SE a linha clicada for a mesma que está no seletor do rodapé, atualiza o visor de lá também!
+    if (nomeDaLinha === categoriaAtiva) {
+        const visorRodape = document.getElementById('qtd-rodape-label');
+        if (visorRodape) visorRodape.innerText = novaQtd;
+    }
+    
+    // 4. Dá a ignição no motor para redesenhar o grid com as novas fotos correspondentes
+    renderizarGrid();
+}
+        // 🛠️ MOTOR DE RENDERIZAÇÃO LIMPO (SEM BOTÕES NAS LINHAS)
+        function renderizarGrid() {
+            const painel = document.getElementById('painelGrid');
+            painel.innerHTML = ''; 
+            // 🚀 GATILHO QUE ATIVA A CATEGORIA CLICADA NA TELA
+function selecionarCategoriaManualmente(nomeDaLinha) {
+    // 1. Atualiza a variável mestre global com a categoria que foi clicada
+    categoriaAtiva = nomeDaLinha;
+    
+    // 2. Manda o motor redesenhar o grid imediatamente
+    // Isso vai fazer o card clicado ganhar a borda dourada e apagar a dos outros na mesma hora!
+    renderizarGrid();
+    
+    // 3. Atualiza o rodapé para garantir que o seletor A, B, C saiba quem governar
+    if (typeof atualizarVisualRodape === "function") {
+        atualizarVisualRodape();
+    }
+}
+
+
+            Object.keys(quantidadesPorLinha).forEach(linha => {
+    const qtdAtual = quantidadesPorLinha[linha];
+    const estiloAtivo = estilosPorLinha[linha];
+    const subtotalLinhaCalculado = qtdAtual * PRECO_UNITARIO;
+
+    // 1. Cria o Card do Produto
+    // ... dentro do seu renderizarGrid(), no loop de cada 'linha' ...
+
+// 1. Cria o Card do Produto
+const divLinha = document.createElement('div');
+divLinha.className = 'linha-produto';
+
+// 🔥 ESSA LINHA É CRUCIAL: Dá o ID correto para o JavaScript achar o card depois
+divLinha.id = `card-${linha}`; 
+
+// 🔥 NOVA LINHA MÁGICA: Ao clicar em QUALQUER lugar do card, ele vira a categoria ativa!
+divLinha.onclick = function() {
+    selecionarCategoriaManualmente(linha);
+};
+
+// 🔥 SELEÇÃO VISUAL: Se for a categoria ativa, bota a borda dourada acesa
+if (linha === categoriaAtiva) {
+    divLinha.classList.add('selecionado');
+} else {
+    divLinha.classList.remove('selecionado');
+}
+
+// ... o resto do seu código (divControleVisor, título, imagens) continua exatamente igual ...
+
+    // 🔥 ESSA LINHA É CRUCIAL: Dá o ID correto para o JavaScript achar o card depois
+    divLinha.id = `card-${linha}`; 
+
+    // 🔥 ESSA VERIFICAÇÃO ACENDE O CARD: Se for a categoria ativa, bota a borda dourada
+    if (linha === categoriaAtiva) {
+        divLinha.classList.add('selecionado');
+    }
+                const divControleVisor = document.createElement('div');
+                divControleVisor.className = 'controle-e-visor';
+                
+// =================================================================
+// 🛠️ TÍTULO DINÂMICO CORRIGIDO (DIVISÃO ESQUERDA / DIREITA)
+// =================================================================
+// =================================================================
+// 🛠️ TOPOGRAFIA MINIMALISTA DO CARD - FOCO TOTAL NAS IMAGENS
+// =================================================================
+const titulo = document.createElement('div');
+titulo.className = 'titulo-linha';
+
+// Limpamos o HTML: removemos os prefixos "Categoria", "Subtotal" e os parênteses do estilo
+titulo.innerHTML = `
+    <div class="textos-esquerda">
+        <span class="nome-produto-direto">${linha}</span>
+    </div>
+    
+    <div class="botoes-direita">
+        <button class="btn-grid-qtd" onclick="alterarQtdDiretoNoGrid('${linha}', -1)">-</button>
+        <span class="numero-grid-qtd">${qtdAtual}</span>
+        <button class="btn-grid-qtd" onclick="alterarQtdDiretoNoGrid('${linha}', 1)">+</button>
+    </div>
+`;
+
+divControleVisor.appendChild(titulo);
+// =================================================================
+
+divControleVisor.appendChild(titulo);
+// =================================================================
+
+                divControleVisor.appendChild(titulo);
+                // =================================================================
+
+                // VISOR DE IMAGENS (MATEMÁTICA DAS COLUNAS MANTIDA)
+                const divImagens = document.createElement('div');
+                divImagens.className = 'imagens-progresso';
+
+                const colunas = 7; 
+                const imagensDaLinha = bancoImagens[linha];
+
+                for (let i = 0; i < qtdAtual; i++) {
+						
+                    const boxquadro = document.createElement('div');
+                    boxquadro.className = 'box-quadro';
+
+                    const linhaAtual = Math.floor(i / colunas);
+                    const colunaAtual = i % colunas;
+
+                    let srcImagem = "";
+                    let ehVazio = false;
+
+                    if (estiloAtivo === "A") {
+                        srcImagem = imagensDaLinha.zero;
+                    } 
+                    else if (estiloAtivo === "B") {
+                        if ((linhaAtual + colunaAtual) % 2 === 0) {
+                            ehVazio = true;
+                        } else {
+                            srcImagem = imagensDaLinha.zero;
+                        }
+                    } 
+                    else if (estiloAtivo === "C") {
+                        srcImagem = (i % 2 === 0) ? imagensDaLinha.zero : (imagensDaLinha.um || imagensDaLinha.zero);
+                    }
+
+                    if (linha === "Efeito 3D" && !ehVazio) {
+                        boxquadro.classList.add('efeito3d');
+                    }
+
+                    if (ehVazio) {
+                        boxquadro.style.background = "transparent";
+                        boxquadro.style.cursor = "default";
+                    } else {
+                        const img = document.createElement("img");
+                        img.src = srcImagem;
+                        boxquadro.appendChild(img);
+                        boxquadro.onclick = function(e) {
+                            e.stopPropagation();
+                            abrirModal(linha, srcImagem);
+                        };
+                    }
+
+                    divImagens.appendChild(boxquadro);
+                }
+								
+                divControleVisor.appendChild(divImagens);
+                divLinha.appendChild(divControleVisor);
+                painel.appendChild(divLinha);
+            });
+
+            // Re-mapeia os elementos no radar caso a estrutura mude
+            if (radarInicializado) {
+                revinculasElementosAoRadar();
+            }
+        }
+
+        // 📡 RADARES E SENSORS DE INTERSEÇÃO (A LÓGICA DO MEIO DA TELA)
+        let radarDeProdutos;
+
+        function inicializarRadar() {
+            const opcoesRadar = {
+                root: null,
+                rootMargin: "0% 80px -80% 0px", // Pega exatamente a faixa central do visor
+                threshold: 0
+            };
+
+            radarDeProdutos = new IntersectionObserver((entradas) => {
+                entradas.forEach(entrada => {
+                    if (entrada.isIntersecting) {
+                        categoriaAtiva = entrada.target.getAttribute('data-categoria');
+                        
+                        // Alimenta o painel fixo do rodapé com as informações corretas do produto ativo
+                        document.getElementById('produto-ativo-label').innerText = `Controlando: ${categoriaAtiva}`;
+                        document.getElementById('tipo-rodape').value = estilosPorLinha[categoriaAtiva] || "A";
+                        document.getElementById('qtd-rodape-label').innerText = quantidadesPorLinha[categoriaAtiva] || 0;
+                    }
+                });
+            }, opcoesRadar);
+
+            radarInicializado = true;
+            revinculasElementosAoRadar();
+        }
+
+        function revinculasElementosAoRadar() {
+            document.querySelectorAll('.linha-produto').forEach(linha => {
+                radarDeProdutos.observe(linha);
+            });
+        }
+
+        // 🔄 FUNÇÕES DE CONTROLE MESTRE DO RODAPÉ FIXO
+        function alterarQuantidadeAtiva(fator) {
+            if (!categoriaAtiva) return;
+            
+            let qtd = (quantidadesPorLinha[categoriaAtiva] || 0) + fator;
+            if (qtd < 0) qtd = 0;
+            if (qtd > 20) qtd = 20; 
+
+            quantidadesPorLinha[categoriaAtiva] = qtd;
+            
+            // Sincroniza o número na etiqueta do rodapé antes de re-renderizar tudo
+            document.getElementById('qtd-rodape-label').innerText = qtd;
+            
+            renderizarGrid(); 
+        }
+
+        function mudarTipoAtivo(novoTipo) {
+            if (!categoriaAtiva) return;
+            estilosPorLinha[categoriaAtiva] = novoTipo;
+            renderizarGrid();
+        }
+
+        // MODAL DO CARRINHO (FINALIZAR PEDIDO)
+        function abrirCarrinhoModal() {
+            const tbody = document.getElementById('itensCarrinho');
+            const totalBox = document.getElementById('totalCarrinho');
+            tbody.innerHTML = '';
+
+            let totalGeral = 0;
+            let temItens = false;
+
+            Object.keys(quantidadesPorLinha).forEach(linha => {
+                const qtd = quantidadesPorLinha[linha];
+                if (qtd > 0) {
+                    temItens = true;
+                    const subtotal = qtd * PRECO_UNITARIO;
+                    totalGeral += subtotal;
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><b>${linha} (${nomesEstilos[estilosPorLinha[linha]]})</b></td>
+                        <td>R$ ${subtotal},00</td>
+                        <td>${qtd}</td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            });
+
+            if (!temItens) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#999; padding: 10px;">Seu carrinho está vazio. Adicione itens antes de finalizar!</td></tr>`;
+            }
+
+            totalBox.innerText = `TOTAL: R$ ${totalGeral},00`;
+            document.getElementById('modalCarrinho').style.display = 'flex';
+        }
+
+        function fecharCarrinhoModal() {
+            document.getElementById('modalCarrinho').style.display = 'none';
+        }
+
+        // MODAL DE DETALHES DE UMA IMAGEM CLICADA
+        function abrirModal(categoria, imagemSrc) {
+            document.getElementById('modalTitulo').innerText = "Quadro Modelo: " + categoria;
+            document.getElementById('modalImg').src = imagemSrc;
+            document.getElementById('modalTxtPreco').innerHTML = `<b>Valor Unitário:</b> R$ ${PRECO_UNITARIO},00`;
+            document.getElementById('modalDetalhes').style.display = 'flex';
+        }
+
+        function fecharModal() {
+            document.getElementById('modalDetalhes').style.display = 'none';
+        }
+
+        function enviarPedidoFaturamento() {
+            alert('Pedido enviado com sucesso para o faturamento!');
+            fecharCarrinhoModal();
+        }
+    </script>
