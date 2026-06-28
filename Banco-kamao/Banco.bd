@@ -1,1 +1,68 @@
+-- Banco-kamao: esquema SQLite para FASE 2
+-- Arquivo: Banco-kamao/Banco.bd
+-- Cria as tabelas necessárias para pro_labore, funcionarios, producao_diaria, vendas, clientes, custos_operacionais e produtos
 
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE IF NOT EXISTS pro_labore (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  valor REAL NOT NULL,
+  data TEXT NOT NULL -- armazenar em ISO 8601 (YYYY-MM-DD ou YYYY-MM-DDTHH:MM:SS)
+);
+
+CREATE TABLE IF NOT EXISTS funcionarios (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nome TEXT NOT NULL,
+  cargo TEXT,
+  contato TEXT,
+  salario REAL,
+  setor TEXT
+);
+
+CREATE TABLE IF NOT EXISTS producao_diaria (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  data TEXT NOT NULL,
+  setor TEXT,
+  quantidade INTEGER DEFAULT 0,
+  meta_calculada REAL
+);
+
+CREATE TABLE IF NOT EXISTS clientes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nome TEXT NOT NULL,
+  contato TEXT,
+  endereco TEXT
+);
+
+CREATE TABLE IF NOT EXISTS produtos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nome TEXT NOT NULL,
+  imagem BLOB, -- armazena bytes da imagem; se preferir armazenar caminho use TEXT
+  categoria TEXT,
+  preco REAL
+);
+
+CREATE TABLE IF NOT EXISTS vendas (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  data TEXT NOT NULL,
+  produto_id INTEGER,
+  quantidade INTEGER DEFAULT 1,
+  valor REAL,
+  vendedor_id INTEGER,
+  cliente_id INTEGER,
+  FOREIGN KEY (produto_id) REFERENCES produtos(id) ON DELETE SET NULL,
+  FOREIGN KEY (vendedor_id) REFERENCES funcionarios(id) ON DELETE SET NULL,
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS custos_operacionais (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  descricao TEXT,
+  valor REAL,
+  tipo TEXT
+);
+
+-- Índices úteis
+CREATE INDEX IF NOT EXISTS idx_vendas_data ON vendas(data);
+CREATE INDEX IF NOT EXISTS idx_funcionarios_setor ON funcionarios(setor);
+CREATE INDEX IF NOT EXISTS idx_producao_data ON producao_diaria(data);
