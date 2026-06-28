@@ -1,0 +1,43 @@
+
+import sqlite3
+
+# 1. Conecta ao banco (se o arquivo não existir, o Python cria ele do zero de verdade)
+conexao = sqlite3.connect('banco.db')
+cursor = conexao.cursor()
+
+# 2. Criação da tabela Pró-Labore
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS pro_labore (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    valor REAL NOT NULL,
+    data TEXT NOT NULL
+);
+''')
+
+# 3. Criação da tabela Funcionários (Corrigida sem a tradução errada do Copilot)
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS funcionarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    cargo TEXT,
+    contato TEXT,
+    salario REAL,
+    setor TEXT
+);
+''')
+
+# 4. Criação da tabela Produção Diária
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS producao_diaria (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    data TEXT NOT NULL,
+    setor TEXT NOT NULL,
+    quantidade INTEGER NOT NULL,
+    meta_calculada INTEGER NOT NULL
+);
+''')
+
+# Salva as alterações e fecha a conexão
+conexao.commit()
+conexao.close()
+print("Banco de dados 'banco.db' criado com sucesso com todas as tabelas!")
