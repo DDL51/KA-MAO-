@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acompanhamento de Pedido - KA-MÃO</title>
+<style>
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#121212;
+    color:#f2f2f2;
+    font-family:-apple-system,Roboto,"Segoe UI",Arial,sans-serif;
+    padding-bottom:40px;
+  }
+  header{
+    text-align:center;
+    padding:36px 20px 20px;
+    border-bottom:1px solid #2a2a2a;
+  }
+  header h1{
+    color:#ff7a29;
+    font-size:2.4rem;
+    letter-spacing:3px;
+    margin:0 0 10px;
+    font-weight:800;
+  }
+  header p{
+    margin:0;
+    font-size:1.1rem;
+  }
+  main{
+    max-width:520px;
+    margin:0 auto;
+    padding:20px 16px;
+  }
+  .card{
+    background:#1c1c1c;
+    border:1px solid #2a2a2a;
+    border-radius:14px;
+    padding:22px;
+    margin-bottom:22px;
+    border-left:4px solid #ff7a29;
+  }
+  .card.amarelo{border-left-color:#ffc93c;}
+  .card.verde{border-left-color:#2ecc71;}
+  .card h2{
+    font-size:0.95rem;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:#9a9a9a;
+    margin:0 0 16px;
+  }
+  .card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .servico-nome{
+    font-size:1.3rem;
+    font-weight:700;
+    margin:0 0 6px;
+  }
+  .badge{
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:0.8rem;
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .badge-verde{background:#123a24;color:#2ecc71;}
+  .badge-laranja{background:#3a2812;color:#ff7a29;}
+  .imagens{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:14px;
+  }
+  .imagens img{
+    width:90px;height:90px;object-fit:cover;
+    border-radius:10px;border:1px solid #2a2a2a;
+  }
+  .info-linha{margin:6px 0;color:#d8d8d8;}
+  .info-linha b{color:#f2f2f2;}
+  .valor-total{
+    font-size:1.05rem;
+    margin-bottom:16px;
+  }
+  .parcela{
+    display:flex;
+    gap:12px;
+    margin-bottom:18px;
+    position:relative;
+  }
+  .parcela:last-child{margin-bottom:0;}
+  .ponto{
+    width:14px;height:14px;border-radius:50%;
+    margin-top:4px;flex:0 0 auto;
+  }
+  .ponto-verde{background:#2ecc71;}
+  .ponto-amarelo{background:#ffc93c;}
+  .parcela-texto{flex:1;min-width:0;}
+  .parcela-linha1{
+    font-size:1.05rem;
+    font-weight:600;
+  }
+  .parcela-valor-txt{white-space:nowrap;}
+  .status-pago{color:#2ecc71;font-weight:700;}
+  .status-aguardando{color:#ffc93c;font-weight:700;}
+  .parcela-data{color:#9a9a9a;font-size:0.85rem;margin-top:4px;}
+  .pix-chave{
+    word-break:break-all;
+    background:#0f0f0f;
+    border:1px solid #2a2a2a;
+    border-radius:8px;
+    padding:12px;
+    font-size:0.95rem;
+    margin:0 0 14px;
+  }
+  .btn-copiar-pix{
+    width:100%;
+    border:none;
+    border-radius:10px;
+    padding:12px;
+    background:#2ecc71;
+    color:#0a2f19;
+    font-weight:700;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>KA-MÃO</h1>
+  <p>Olá, <b>Angela</b> 👋</p>
+</header>
+
+<main>
+
+  <div class="card">
+    <h2>Serviço / Produto</h2>
+    <div class="card-top">
+      <div>
+        <p class="servico-nome">Serviço em Piso de madeira (concerto)</p>
+      </div>
+      <span class="badge badge-laranja">PARCELADO</span>
+    </div>
+    <p class="info-linha"><b>Endereço:</b> São Conrado</p>
+    <p class="info-linha"><b>Contato:</b> 210000800</p>
+    
+  </div>
+
+  <div class="card amarelo">
+    <h2>Pagamento</h2>
+    <p class="valor-total">Valor Total: <b>R$ 11.000,00</b></p>
+    
+      <div class="parcela">
+        <span class="ponto ponto-verde"></span>
+        <div class="parcela-texto">
+          <div class="parcela-linha1">
+            <span class="parcela-valor-txt">1ª Parcela - R$ 2.000,00</span>
+          </div>
+          <div class="parcela-data">
+            <span class="status-pago">● Paga</span>
+            &nbsp;·&nbsp;Pago em 
+          </div>
+        </div>
+      </div>
+      <div class="parcela">
+        <span class="ponto ponto-verde"></span>
+        <div class="parcela-texto">
+          <div class="parcela-linha1">
+            <span class="parcela-valor-txt">2ª Parcela - R$ 500,00</span>
+          </div>
+          <div class="parcela-data">
+            <span class="status-pago">● Paga</span>
+            &nbsp;·&nbsp;Pago em 
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div class="card verde">
+    <h2>Pagamento via Pix</h2>
+    <p class="pix-chave" id="pixChave">21979086060</p>
+    <button type="button" class="btn-copiar-pix" onclick="copiarPix()">Copiar chave Pix</button>
+  </div>
+</main>
+
+<script>
+function copiarPix(){
+  var chave = document.getElementById('pixChave').textContent;
+  function avisar(){ alert('Chave Pix copiada!'); }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(chave).then(avisar).catch(copiarFallback);
+  } else {
+    copiarFallback();
+  }
+  function copiarFallback(){
+    var ta = document.createElement('textarea');
+    ta.value = chave;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    avisar();
+  }
+}
+</script>
+</body>
+</html>
